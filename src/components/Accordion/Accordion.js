@@ -2,17 +2,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classnames from 'classnames';
 import { settings } from 'carbon-components';
+import AccordionSpec from '@carbon/spec/components/accordion/accordion-config.js';
 
 const { prefix } = settings;
 
 const Accordion = ({ children, className, ...other }) => {
-  const classNames = classnames(`${prefix}--accordion`, className);
+  const accordionConfig = AccordionSpec.generate({
+    prefix,
+  });
+
+  const classNames = classnames(className, `${accordionConfig.classes.root}`);
+
   return (
-    <ul
-      className={classNames}
-      role="tablist"
-      aria-multiselectable="true"
-      {...other}>
+    <ul className={classNames} {...accordionConfig.attributes} {...other}>
       {children}
     </ul>
   );

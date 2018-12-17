@@ -2,16 +2,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classnames from 'classnames';
 import { settings } from 'carbon-components';
+import BreadcrumbSpec from '@carbon/spec/components/breadcrumb/breadcrumb-config.js';
 
 const { prefix } = settings;
 
 const Breadcrumb = ({ children, className, noTrailingSlash, ...other }) => {
-  const classNames = classnames(className, {
-    [`${prefix}--breadcrumb`]: true,
-    [`${prefix}--breadcrumb--no-trailing-slash`]: noTrailingSlash,
+  const breadcrumbConfig = BreadcrumbSpec.generate({
+    noTrailingSlash,
+    prefix,
   });
+
+  const classNames = classnames(className, `${breadcrumbConfig.classes.root}`);
+
   return (
-    <div className={classNames} {...other}>
+    <div className={classNames} {...breadcrumbConfig.attributes} {...other}>
       {children}
     </div>
   );

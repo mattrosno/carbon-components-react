@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { iconChevronRight } from 'carbon-icons';
 import { settings } from 'carbon-components';
 import Icon from '../Icon';
+import AccordionSpec from '@carbon/spec/components/accordion/accordion-config.js';
 
 const { prefix } = settings;
 
@@ -56,7 +57,7 @@ export default class AccordionItem extends Component {
   };
 
   static defaultProps = {
-    title: 'title',
+    title: 'Title',
     renderExpando: defaultRenderExpando,
     iconDescription: 'Expand/Collapse',
     open: false,
@@ -105,33 +106,37 @@ export default class AccordionItem extends Component {
       ...other
     } = this.props;
 
+    const accordionItemConfig = AccordionSpec.generate.generateAccordionItem({
+      active: this.state.open,
+      prefix,
+    });
+
+    const accordionHeadingConfig = AccordionSpec.generate.generateAccordionHeading();
+
     const classNames = classnames(
-      {
-        [`${prefix}--accordion__item--active`]: this.state.open,
-      },
-      `${prefix}--accordion__item`,
-      className
+      className,
+      `${accordionItemConfig.classes.item}`
     );
+
     return (
       <li
         className={classNames}
         onClick={this.handleClick}
         onKeyPress={this.handleKeyPress}
-        role="presentation"
+        {...accordionItemConfig.attributes}
         {...other}>
         <Expando
-          type="button"
-          className={`${prefix}--accordion__heading`}
-          role="tab"
-          onClick={this.handleHeadingClick}>
+          className={accordionItemConfig.classes.heading}
+          onClick={this.handleHeadingClick}
+          {...accordionHeadingConfig.attributes}>
           <Icon
-            className={`${prefix}--accordion__arrow`}
+            className={accordionItemConfig.classes.icon}
             icon={iconChevronRight}
             description={iconDescription}
           />
-          <div className={`${prefix}--accordion__title`}>{title}</div>
+          <div className={accordionItemConfig.classes.title}>{title}</div>
         </Expando>
-        <div className={`${prefix}--accordion__content`}>{children}</div>
+        <div className={accordionItemConfig.classes.content}>{children}</div>
       </li>
     );
   }
