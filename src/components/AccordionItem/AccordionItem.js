@@ -4,14 +4,17 @@ import classnames from 'classnames';
 import { iconChevronRight } from 'carbon-icons';
 import { settings } from 'carbon-components';
 import Icon from '../Icon';
-import AccordionSpec from '@carbon/spec/components/accordion/accordion-config.js';
+import accordionConfig from '@carbon/spec/components/accordion/accordion-config.js';
 
 const { prefix } = settings;
 
 const defaultRenderExpando = props => <button {...props} />;
 
 export default class AccordionItem extends Component {
-  state = {};
+  state = {
+    id: this.props.id,
+    open: this.props.open,
+  };
 
   static propTypes = {
     /**
@@ -23,6 +26,11 @@ export default class AccordionItem extends Component {
      * Specify an optional className to be applied to the container node
      */
     className: PropTypes.string,
+
+    /**
+     * Specify an id for each item
+     */
+    id: PropTypes.string,
 
     /**
      * The accordion title.
@@ -85,11 +93,13 @@ export default class AccordionItem extends Component {
     this.props.onHeadingClick({ isOpen: open, event: evt });
   };
 
-  handleKeyPress = evt => {
+  handleKeyDown = evt => {
     const isKeyPressTarget = evt.target === evt.currentTarget;
     const isValidKeyPress = [13, 32].indexOf(evt.which) !== -1;
 
     if (isKeyPressTarget && isValidKeyPress) {
+      evt.stopPropagation();
+      evt.preventDefault();
       this.handleHeadingClick(evt);
     }
   };
@@ -103,41 +113,41 @@ export default class AccordionItem extends Component {
       children,
       onClick, // eslint-disable-line no-unused-vars
       onHeadingClick, // eslint-disable-line no-unused-vars
-      ...other
     } = this.props;
 
-    const accordionItemConfig = AccordionSpec.generate.generateAccordionItem({
+    const config = accordionConfig(prefix);
+
+    const accordionItem = config.generateItem({
       active: this.state.open,
-      prefix,
+      paneId: this.state.id,
     });
 
-    const accordionHeadingConfig = AccordionSpec.generate.generateAccordionHeading();
-
-    const classNames = classnames(
-      className,
-      `${accordionItemConfig.classes.item}`
-    );
+    const Element = `${accordionItem.element}`;
+    const classNames = classnames(className, `${accordionItem.classes.item}`);
 
     return (
-      <li
+      <Element
         className={classNames}
         onClick={this.handleClick}
-        onKeyPress={this.handleKeyPress}
-        {...accordionItemConfig.attributes}
-        {...other}>
+        {...accordionItem.attributes}>
         <Expando
-          className={accordionItemConfig.classes.heading}
+          className={accordionItem.classes.heading}
           onClick={this.handleHeadingClick}
-          {...accordionHeadingConfig.attributes}>
+          onKeyDown={this.handleKeyDown}
+          {...accordionItem.heading.attributes}>
           <Icon
-            className={accordionItemConfig.classes.icon}
+            className={accordionItem.classes.icon}
             icon={iconChevronRight}
             description={iconDescription}
           />
-          <div className={accordionItemConfig.classes.title}>{title}</div>
+          <div className={accordionItem.classes.title}>{title}</div>
         </Expando>
-        <div className={accordionItemConfig.classes.content}>{children}</div>
-      </li>
+        <div
+          className={accordionItem.classes.content}
+          {...accordionItem.content.attributes}>
+          {children}
+        </div>
+      </Element>
     );
   }
 }

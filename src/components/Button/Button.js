@@ -2,15 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Icon from '../Icon';
 import classNames from 'classnames';
-import { oneOf } from 'prop-types';
 import { settings } from 'carbon-components';
-import ButtonSpec from '@carbon/spec/components/button/button-config.js';
+import { ButtonTypes } from '../../prop-types/types';
 
 const { prefix } = settings;
-
-const ButtonTypes = {
-  buttonKind: oneOf(ButtonSpec.variants),
-};
 
 const Button = ({
   children,
@@ -25,21 +20,20 @@ const Button = ({
   iconDescription,
   ...other
 }) => {
-  const buttonConfig = ButtonSpec.generate({
-    content: children,
-    disabled,
-    href,
-    icon,
-    prefix,
-    small,
-    tabIndex,
-    type,
-    variant: kind,
+  const buttonClasses = classNames(className, {
+    [`${prefix}--btn`]: true,
+    [`${prefix}--btn--sm`]: small,
+    [`${prefix}--btn--primary`]: kind === 'primary',
+    [`${prefix}--btn--danger`]: kind === 'danger',
+    [`${prefix}--btn--secondary`]: kind === 'secondary',
+    [`${prefix}--btn--ghost`]: kind === 'ghost',
+    [`${prefix}--btn--danger--primary`]: kind === 'danger--primary',
+    [`${prefix}--btn--tertiary`]: kind === 'tertiary',
   });
 
   const commonProps = {
-    tabIndex: buttonConfig.tabIndex,
-    className: classNames(className, `${buttonConfig.classes.root}`),
+    tabIndex,
+    className: buttonClasses,
   };
 
   const buttonImage = icon ? (
@@ -55,11 +49,10 @@ const Button = ({
     <button
       {...other}
       {...commonProps}
-      {...buttonConfig.attributes}
-      disabled={buttonConfig.disabled}
-      type={buttonConfig.type}
+      disabled={disabled}
+      type={type}
       ref={other.inputref}>
-      <span className={buttonConfig.classes.content}>{children}</span>
+      {children}
       {buttonImage}
     </button>
   );
@@ -68,10 +61,10 @@ const Button = ({
     <a
       {...other}
       {...commonProps}
-      {...buttonConfig.attributes}
       href={href}
+      role="button"
       ref={other.inputref}>
-      <span className={buttonConfig.classes.content}>{children}</span>
+      {children}
       {buttonImage}
     </a>
   );
@@ -153,15 +146,13 @@ Button.propTypes = {
   },
 };
 
-const defaultButton = ButtonSpec.generate();
-
 Button.defaultProps = {
   iconDescription: 'Provide icon description if icon is used',
-  tabIndex: defaultButton.tabIndex,
-  type: defaultButton.type,
-  disabled: defaultButton.disabled,
-  small: defaultButton.small,
-  kind: defaultButton.variant,
+  tabIndex: 0,
+  type: 'button',
+  disabled: false,
+  small: false,
+  kind: 'primary',
 };
 
 export default Button;

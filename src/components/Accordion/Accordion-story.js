@@ -24,6 +24,7 @@ storiesOf('Accordion', module)
         <AccordionItem
           title={text('The title (title)', 'Section 1 title')}
           open={boolean('Open the section (open)', false)}
+          id="pane1"
           {...props}>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -32,7 +33,7 @@ storiesOf('Accordion', module)
             aliquip ex ea commodo consequat.
           </p>
         </AccordionItem>
-        <AccordionItem title="Section 2 title" {...props}>
+        <AccordionItem title="Section 2 title" id="pane2" {...props}>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -40,7 +41,7 @@ storiesOf('Accordion', module)
             aliquip ex ea commodo consequat.
           </p>
         </AccordionItem>
-        <AccordionItem title="Section 3 title" {...props}>
+        <AccordionItem title="Section 3 title" id="pane3" {...props}>
           <Select
             onChange={action('onChange')}
             id="select-1"
@@ -62,6 +63,7 @@ storiesOf('Accordion', module)
               Section 4 title (<em>the title can be a node</em>)
             </h4>
           }
+          id="pane4"
           {...props}>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

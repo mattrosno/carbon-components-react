@@ -2,21 +2,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classnames from 'classnames';
 import { settings } from 'carbon-components';
-import AccordionSpec from '@carbon/spec/components/accordion/accordion-config.js';
+import accordionConfig from '@carbon/spec/components/accordion/accordion-config.js';
 
 const { prefix } = settings;
 
 const Accordion = ({ children, className, ...other }) => {
-  const accordionConfig = AccordionSpec.generate({
-    prefix,
-  });
+  const config = accordionConfig(prefix);
+  const accordion = config.generate();
 
-  const classNames = classnames(className, `${accordionConfig.classes.root}`);
+  const Element = `${accordion.element}`;
+  const classNames = classnames(className, `${accordion.classes.root}`);
 
   return (
-    <ul className={classNames} {...accordionConfig.attributes} {...other}>
+    <Element className={classNames} {...accordion.attributes} {...other}>
       {children}
-    </ul>
+    </Element>
   );
 };
 

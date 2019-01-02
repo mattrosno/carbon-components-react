@@ -3,13 +3,8 @@ import React from 'react';
 import classnames from 'classnames';
 import { settings } from 'carbon-components';
 import Link from '../Link';
-import BreadcrumbSpec from '@carbon/spec/components/breadcrumb/breadcrumb-config.js';
 
 const { prefix } = settings;
-
-const breadcrumbItemConfig = BreadcrumbSpec.generate.generateBreadcrumbItem({
-  prefix,
-});
 
 const newChild = (children, href, prefix) => {
   if (typeof children === 'string' && !(href === undefined)) {
@@ -22,10 +17,7 @@ const newChild = (children, href, prefix) => {
 };
 
 const BreadcrumbItem = ({ children, className, href, ...other }) => {
-  const classNames = classnames(
-    `${breadcrumbItemConfig.classes.item}`,
-    className
-  );
+  const classNames = classnames(`${prefix}--breadcrumb-item`, className);
   return (
     <div className={classNames} {...other}>
       {newChild(children, href, prefix)}
