@@ -21,7 +21,7 @@ const kinds = {
   'Primary button (primary)': 'primary',
   'Secondary button (secondary)': 'secondary',
   'Danger button (danger)': 'danger',
-  'Danger primary button (danger--primary)': 'danger--primary',
+  'Danger primary button (danger--primary)': 'dangerPrimary',
   'Ghost button (ghost)': 'ghost',
 };
 

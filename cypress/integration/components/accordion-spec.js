@@ -2,15 +2,16 @@ import 'carbon-components/css/carbon-components.css';
 import React from 'react';
 import Accordion from '../../../src/components/Accordion';
 import AccordionItem from '../../../src/components/AccordionItem';
+import get from 'lodash.get';
 import { mount } from 'cypress-react-unit-test';
 import { settings } from 'carbon-components';
 import accordionConfig from '@carbon/spec/components/accordion/accordion-config.js';
 import accordionTest from '@carbon/spec/components/accordion/accordion-test.js';
 
-const mountComponent = () => {
+const mountComponent = demo => {
   const { prefix } = settings;
   const config = accordionConfig(prefix);
-  const context = config.demo.variants.default.context;
+  const context = get(config.demo, demo, { context: {} }).context;
 
   mount(
     <Accordion>

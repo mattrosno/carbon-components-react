@@ -117,6 +117,8 @@ export default class AccordionItem extends Component {
 
     const config = accordionConfig(prefix);
 
+    // TODO SPEC is there a better way to get new attributes from the spec on
+    // state change so generateItem doesn't fire more than it needs to?
     const accordionItem = config.generateItem({
       active: this.state.open,
       paneId: this.state.id,

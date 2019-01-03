@@ -2,38 +2,45 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Icon from '../Icon';
 import classNames from 'classnames';
+import { oneOf } from 'prop-types';
 import { settings } from 'carbon-components';
-import { ButtonTypes } from '../../prop-types/types';
+import buttonConfig from '@carbon/spec/components/button/button-config.js';
 
 const { prefix } = settings;
+const config = buttonConfig(prefix);
+const ButtonTypes = {
+  buttonKind: oneOf(Object.keys(config.selectors.variants)),
+};
 
 const Button = ({
   children,
   className,
   disabled,
+  element,
   small,
   kind,
-  href,
   tabIndex,
   type,
   icon,
   iconDescription,
   ...other
 }) => {
-  const buttonClasses = classNames(className, {
-    [`${prefix}--btn`]: true,
-    [`${prefix}--btn--sm`]: small,
-    [`${prefix}--btn--primary`]: kind === 'primary',
-    [`${prefix}--btn--danger`]: kind === 'danger',
-    [`${prefix}--btn--secondary`]: kind === 'secondary',
-    [`${prefix}--btn--ghost`]: kind === 'ghost',
-    [`${prefix}--btn--danger--primary`]: kind === 'danger--primary',
-    [`${prefix}--btn--tertiary`]: kind === 'tertiary',
+  const buttonConfig = config.generate({
+    content: children,
+    disabled,
+    element,
+    icon,
+    prefix,
+    size: small ? 'small' : '',
+    tabIndex,
+    type,
+    variant: kind,
   });
 
+  const Element = `${buttonConfig.element}`;
   const commonProps = {
-    tabIndex,
-    className: buttonClasses,
+    tabIndex: buttonConfig.tabIndex,
+    className: classNames(className, `${buttonConfig.classes.root}`),
   };
 
   const buttonImage = icon ? (
@@ -45,31 +52,16 @@ const Button = ({
     />
   ) : null;
 
-  const button = (
-    <button
+  return (
+    <Element
       {...other}
       {...commonProps}
-      disabled={disabled}
-      type={type}
+      {...buttonConfig.attributes}
       ref={other.inputref}>
       {children}
       {buttonImage}
-    </button>
+    </Element>
   );
-
-  const anchor = (
-    <a
-      {...other}
-      {...commonProps}
-      href={href}
-      role="button"
-      ref={other.inputref}>
-      {children}
-      {buttonImage}
-    </a>
-  );
-
-  return href ? anchor : button;
 };
 
 Button.propTypes = {
@@ -87,6 +79,11 @@ Button.propTypes = {
    * Specify whether the Button should be disabled, or not
    */
   disabled: PropTypes.bool,
+
+  /**
+   * Specify whether the button is a button or anchor
+   */
+  element: PropTypes.string,
 
   /**
    * Specify whether the Button should be a small variant
@@ -146,13 +143,16 @@ Button.propTypes = {
   },
 };
 
+// TODO SPEC better way to get default props from spec?
+const defaultButton = config.generate();
+
 Button.defaultProps = {
   iconDescription: 'Provide icon description if icon is used',
-  tabIndex: 0,
-  type: 'button',
-  disabled: false,
-  small: false,
-  kind: 'primary',
+  tabIndex: defaultButton.tabIndex,
+  type: defaultButton.type,
+  disabled: defaultButton.disabled,
+  small: defaultButton.size === 'small',
+  kind: defaultButton.variant,
 };
 
 export default Button;
